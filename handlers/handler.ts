@@ -11,4 +11,6 @@ export default async function handler(app: Express) {
 
     // 404 at everything
     app.use(NotFoundHandler)
+    console.log("The app is ready to serve.")
+
 }

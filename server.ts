@@ -17,12 +17,21 @@ consoleStamp(console)
 
 const filesH = new FilesHandler()
 
+app.get("/test", async (req, res, next) => {
+    let test = await filesH.get_file('egg.txt')
+
+    test.pipe(res)
+})
+
 
 /*
     Start the application
 */
 app.listen(process.env.PORT || 8080, async () => {
     console.log("The application started on port " + process.env.PORT || 8080)
+    console.log("Starting Fileserver.....")
     await filesH.Init()
+    console.log("Successfully started file servers")
+    console.log("Registering Listeners....")
     return handler(app)
 })
