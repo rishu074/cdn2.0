@@ -10,6 +10,8 @@ declare global {
         FTP_URL: string;
         FTP_USER: string;
         FTP_PASSWORD: string;
+        TITLES: string;
+        DESCRIPTIONS: string;
       }
     }
   }
