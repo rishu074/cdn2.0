@@ -9,6 +9,7 @@ export default async function HandleGetFile(req: express.Request, res: express.R
 
     try {
         var response = await handler.get_file(file.toString())
+        await handler.destroy()
         response.pipe(res)
 
         response.once('end', () => {
