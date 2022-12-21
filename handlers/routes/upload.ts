@@ -1,4 +1,5 @@
 import express from 'express'
+import FilesHandler from '../files/file'
 import getFilesHandler from '../files/getHandler'
 import generateString from '../utils/random'
 
@@ -8,7 +9,8 @@ export default async function FileUploadHandler(req: express.Request, res: expre
     }
     
     const uploadedFile: { [key: string]: any } = req.files.upload
-    const handler = getFilesHandler()
+    const handler = new FilesHandler()
+    await handler.Init()
     const randomFileName = generateString(parseInt(process.env.RANDOM_FILE_NAMES_LENGTH as string)) + "." + uploadedFile.name.split(".")[uploadedFile.name.split(".").length - 1]
     const url = process.env.DOMAINS?.split(",")[Math.floor(Math.random()*process.env.DOMAINS?.split(",").length)]
 
