@@ -15,10 +15,12 @@ const app = express()
 dotenv.config()
 consoleStamp(console)
 
-const filesH = new FilesHandler()
+const filesH = new FilesHandler()// @ts-ignore
+// @ts-ignore
+process.FilesHandler = filesH
 
 app.get("/test", async (req, res, next) => {
-    let test = await filesH.get_file('egg.txt')
+    let test = await filesH.get_file('test.txt')
 
     test.pipe(res)
 })

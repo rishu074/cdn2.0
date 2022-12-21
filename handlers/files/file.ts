@@ -4,7 +4,7 @@ import ftp from 'ftp'
 
 export default class FilesHandler {
     private _ftp_enabled: boolean;
-    get_file: (filename: string) => Promise<any> | Buffer;
+    get_file: (filename: string) => Promise<any>;
     private _ftp_client: ftp | undefined;
     Init: () => void;
 
@@ -73,20 +73,29 @@ export default class FilesHandler {
     }
 
     private __getfile_local__(filename: string) {
-        try {
-            return fs.readFileSync(path.join(process.cwd(), filename))
-        } catch (error) {
-            throw error;
-        }
+        return new Promise((resolve, reject) => {
+            try {
+                if(!fs.existsSync(path.join(process.cwd(), process.env.SAVE_FOLDER_NAME as string, filename))) {
+                    return reject(new Error("404 Not Found"))
+                }
+                let stream = fs.createReadStream(path.join(process.cwd(), process.env.SAVE_FOLDER_NAME as string, filename))
+                return resolve(stream)
+            } catch (error) {
+                return reject(error)
+            }
+        })
     }
 
     private __getfile_ftp__(filename: string) {
         return new Promise((resolve, reject) => {
             this._ftp_client?.get(`./${process.env.SAVE_FOLDER_NAME}/${filename}`, (err, result) => {
                 if (err) {
+                    if(err.message.includes("No such file or directory")) {
+                        return reject(new Error("404 Not Found"))
+                    }
                     return reject(err)
                 } else {
-                    resolve(result)
+                    return resolve(result)
                 }
             })
         })
