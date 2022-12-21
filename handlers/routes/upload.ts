@@ -6,7 +6,7 @@ export default async function FileUploadHandler(req: express.Request, res: expre
     if (!req.files?.upload) {
         return res.sendStatus(400)
     }
-
+    
     const uploadedFile: { [key: string]: any } = req.files.upload
     const handler = getFilesHandler()
     const randomFileName = generateString(parseInt(process.env.RANDOM_FILE_NAMES_LENGTH as string)) + "." + uploadedFile.name.split(".")[uploadedFile.name.split(".").length - 1]

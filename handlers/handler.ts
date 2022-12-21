@@ -15,7 +15,7 @@ export default async function handler(app: Express) {
         safeFileNames: true,
         limits: { fileSize: (parseInt(process.env.MAX_UPLOAD as any) * 1e+6) },
         abortOnLimit: true,
-        responseOnLimit: "File size limit reached.",
+        responseOnLimit: JSON.stringify({ "error": "File size limit reached." }),
         preserveExtension: true
     }), FileUploadHandler)
 
