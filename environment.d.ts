@@ -12,6 +12,7 @@ declare global {
         FTP_PASSWORD: string;
         TITLES: string;
         DESCRIPTIONS: string;
+        DOMAINS: string;
       }
     }
   }

@@ -7,6 +7,7 @@ export default class FilesHandler {
     get_file: (filename: string) => Promise<any>;
     private _ftp_client: ftp | undefined;
     Init: () => void;
+    upload_file: (data: Buffer, filename: string) => Promise<any>;
 
     constructor() {
         this._ftp_enabled = process.env.FTP_ENABLED === "true"
@@ -20,6 +21,10 @@ export default class FilesHandler {
         this.get_file = this._ftp_enabled ?
             this.__getfile_ftp__ :
             this.__getfile_local__
+
+        this.upload_file = this._ftp_enabled ?
+        this.__uploadfile_ftp__ :
+            this.__uploadfile_local__
 
     }
 
@@ -98,6 +103,32 @@ export default class FilesHandler {
                     return resolve(result)
                 }
             })
+        })
+    }
+    private __uploadfile_local__(data: Buffer, filename: string) {
+        return new Promise((resolve, reject) => {
+            try {
+                fs.writeFileSync(path.join(process.cwd(), process.env.SAVE_FOLDER_NAME as string, filename), data)
+                resolve(true)
+            } catch (error) {
+                return reject(error)
+            }
+        })  
+    }
+
+    private __uploadfile_ftp__(data: Buffer, filename: string) {
+        return new Promise((resolve, reject) => {
+            try {
+                this._ftp_client?.put(data, `${process.env.SAVE_FOLDER_NAME as string}/${filename}`, (err) => {
+                    if(err) {
+                        return reject(err)
+                    } else {
+                        resolve(true)
+                    }
+                })
+            } catch (error) {
+                return reject(error)
+            }
         })
     }
 }
