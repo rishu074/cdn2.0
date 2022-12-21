@@ -1,12 +1,15 @@
 import express from 'express'
 import getFilesHandler from '../files/getHandler'
+import FilesHandler from '../files/file'
 
 export default async function HandleGetFile(req: express.Request, res: express.Response, next: express.NextFunction) {
     const file = req.params.name
-    const handler = getFilesHandler()
+    const handler = new FilesHandler()
+    await handler.Init()
 
     try {
         var response = await handler.get_file(file.toString())
+        await handler.destroy()
         response.pipe(res)
 
     } catch (error: any) {
