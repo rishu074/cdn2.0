@@ -4,13 +4,17 @@ import ServeHtmlHandler from "./routes/serve/serve";
 import HandleGetFile from "./routes/case";
 import FileUploadHandler from "./routes/upload";
 import expressFileUpload from 'express-fileupload'
+import apicache from 'apicache'
 
 export default async function handler(app: Express) {
     app.set('view engine', 'ejs');
 
     // serve html files with the link
     app.get("/box/:link", ServeHtmlHandler)
-    app.get("/case/:name", HandleGetFile)
+
+    // caching
+    const catchMiddleware = apicache.middleware
+    app.get("/case/:name", catchMiddleware("1 hour"), HandleGetFile)
     app.post("/upload", expressFileUpload({
         safeFileNames: true,
         limits: { fileSize: (parseInt(process.env.MAX_UPLOAD as any) * 1e+6) },
