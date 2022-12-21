@@ -131,4 +131,11 @@ export default class FilesHandler {
             }
         })
     }
+
+    /**
+     * Destroys the connection
+     */
+    public destroy() {
+        this._ftp_client?.destroy()
+    }
 }

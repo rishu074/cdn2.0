@@ -15,8 +15,11 @@ export default async function FileUploadHandler(req: express.Request, res: expre
     const url = process.env.DOMAINS?.split(",")[Math.floor(Math.random()*process.env.DOMAINS?.split(",").length)]
 
 
+
+
     try {
         await handler.upload_file(uploadedFile.data, randomFileName)
+        await handler.destroy()
     } catch (error) {
         console.error(error)
         return res.status(500).json({"error": "server error"})
